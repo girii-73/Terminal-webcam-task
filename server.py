@@ -10,7 +10,7 @@ def start_webcam_server(host='0.0.0.0', port=5555):
     server.listen(1)
     print(f"Webcam server listening on {host}:{port}")
     
-    cap = cv2.VideoCapture(0)  # 0 = default webcam
+    cap = cv2.VideoCapture(0) 
     
     while True:
         conn, addr = server.accept()
@@ -21,12 +21,8 @@ def start_webcam_server(host='0.0.0.0', port=5555):
                 ret, frame = cap.read()
                 if not ret:
                     break
-                
-                # Compress frame to reduce bandwidth
                 ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
                 data = pickle.dumps(buffer)
-                
-                # Send frame size first, then frame data
                 message = struct.pack("Q", len(data)) + data
                 conn.sendall(message)
         except Exception as e:

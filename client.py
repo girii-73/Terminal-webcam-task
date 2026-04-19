@@ -23,15 +23,11 @@ def connect_to_webcam(host, port=5555):
             packed_msg_size = data[:payload_size]
             data = data[payload_size:]
             msg_size = struct.unpack("Q", packed_msg_size)[0]
-            
-            # Receive frame data
             while len(data) < msg_size:
                 data += sock.recv(4 * 1024)
             
             frame_data = data[:msg_size]
             data = data[msg_size:]
-            
-            # Decompress and display
             frame = pickle.loads(frame_data)
             frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
             
